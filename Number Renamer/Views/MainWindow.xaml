@@ -27,7 +27,7 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+
     <Grid Background="#FF575757">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="67*"/>
@@ -71,5 +71,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        <ProgressBar Margin="73,0,249,0" Grid.Column="1" Maximum="100" Value="{Binding Progress}" Foreground="MediumSeaGreen" Visibility="{Binding Visibility}" Background="Silver" Grid.Row="1"/>
     </Grid>
 </Window>

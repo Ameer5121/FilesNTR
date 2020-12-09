@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ namespace Number_Renamer.ViewModels
         public FileViewModel()
         {
             _files = new ObservableCollection<FileModel>();
+            _visibility = Visibility.Collapsed;           
         }
         #endregion
 
@@ -28,6 +30,8 @@ namespace Number_Renamer.ViewModels
         private string _last;           
         private int _beginningNumber;
         private ObservableCollection<FileModel> _files;
+        private Visibility _visibility;
+        private decimal _progress;
         #endregion
 
         #region Properties
@@ -38,6 +42,8 @@ namespace Number_Renamer.ViewModels
             get => _beginningNumber;
             set
             {
+                if (IsRunning())
+                    return;               
                 _beginningNumber = value;
                 OnPropertyChanged();
             }
@@ -48,6 +54,8 @@ namespace Number_Renamer.ViewModels
             get => _first;
             set
             {
+                if (IsRunning())
+                    return;
                 _first = value;
                 OnPropertyChanged();
             }
@@ -57,19 +65,47 @@ namespace Number_Renamer.ViewModels
             get => _last;
             set
             {
+                if (IsRunning())
+                    return;
                 _last = value;
+                OnPropertyChanged();
+            }
+        }
+        public Visibility Visibility
+        {
+            get => _visibility;
+            set
+            {
+                _visibility = value;
+                OnPropertyChanged();
+            }
+        }
+        public decimal Progress
+        {
+            get => _progress;
+            set
+            {
+                _progress = value;
                 OnPropertyChanged();
             }
         }
         #endregion
 
         #region Commands
-        public ICommand ChooseFiles => new RelayCommand(Choose);
+        public ICommand ChooseFiles => new RelayCommand(Choose, CanChoose);
         public ICommand Delete => new RelayCommand(RemoveFiles, CanRemoveFile);
         public ICommand Rename => new RelayCommand(RenameFiles, CanRenameFiles);
         #endregion
 
         #region Methods
+
+        private bool CanChoose()
+        {
+            if (Visibility == Visibility.Visible)
+                return false;
+            return true;
+        }
+
         private void Choose(object extra)
         {
             var OpenDialog = new OpenFileDialog();
@@ -90,7 +126,7 @@ namespace Number_Renamer.ViewModels
         }
         private bool CanRemoveFile()
         {
-            if (_files.Count <= 0)
+            if (_files.Count <= 0 || Visibility == Visibility.Visible)
                 return false;
 
             return true;
@@ -112,6 +148,7 @@ namespace Number_Renamer.ViewModels
         {
             
             var desktopfolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\ReNamedFiles";
+            Visibility = Visibility.Visible;
             if (!Directory.Exists(desktopfolder))
             {
                 Directory.CreateDirectory(desktopfolder);
@@ -120,14 +157,28 @@ namespace Number_Renamer.ViewModels
             {
                 for (int i = BeginningNumber; i < _files.Count + BeginningNumber; i++)
                 {
+                    UpdateProgress((decimal)100 / _files.Count);
                     File.Copy($"{_files[i - BeginningNumber].FilePath}", 
                     $"{desktopfolder}\\{_first}{i}{_last}" +
                     $"{Path.GetExtension(_files[i - BeginningNumber].FilePath)}", true);
                 }
-            });
-            DisplayAlert?.Invoke(this, new MessageEventArgs { Message = "Completed. Check your desktop for a folder." });
-            _files.Clear();
+            });          
+            OnFinish();
+        }
 
+        private bool IsRunning() 
+        {
+            return Visibility == Visibility.Visible ? true : false;
+        }
+
+        private void UpdateProgress(decimal ValueToAdd) => Progress += ValueToAdd;
+
+        private void OnFinish()
+        {
+            Progress = 0;
+            Visibility = Visibility.Collapsed;
+            _files.Clear();
+            DisplayAlert?.Invoke(this, new MessageEventArgs { Message = "Completed. Check your desktop for a folder." });
         }
         #endregion
     }
