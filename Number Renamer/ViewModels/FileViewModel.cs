@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -94,7 +95,7 @@ namespace Number_Renamer.ViewModels
         #region Commands
         public ICommand ChooseFiles => new RelayCommand(Choose, CanChoose);
         public ICommand Delete => new RelayCommand(RemoveFiles, CanRemoveFile);
-        public ICommand Rename => new RelayCommand(RenameFiles, CanRenameFiles);
+        public ICommand Rename => new RelayCommand(SelectFolder, CanRenameFiles);
         #endregion
 
         #region Methods
@@ -106,7 +107,7 @@ namespace Number_Renamer.ViewModels
             return true;
         }
 
-        private void Choose(object extra)
+        private void Choose(object param)
         {
             var OpenDialog = new OpenFileDialog();
             OpenDialog.Multiselect = true;
@@ -144,25 +145,36 @@ namespace Number_Renamer.ViewModels
             return true;
         }
 
-        private async void RenameFiles(object extra)
+        private void SelectFolder(object param)
         {
-            
-            var desktopfolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\ReNamedFiles";
-            Visibility = Visibility.Visible;
-            if (!Directory.Exists(desktopfolder))
+            var OpenDialog = new FolderBrowserDialog();
+            if (OpenDialog.ShowDialog() == DialogResult.OK)
             {
-                Directory.CreateDirectory(desktopfolder);
+                RenameFiles(OpenDialog.SelectedPath);
             }
+        }
+
+        private async void RenameFiles(string FolderPath)
+        {                      
+            List<Task> Holder = new List<Task>();
+            Visibility = Visibility.Visible;
+            if (!Directory.Exists(FolderPath))
+            {
+                Directory.CreateDirectory(FolderPath);
+            }           
+
+            int i = BeginningNumber;
             await Task.Run(() =>
             {
-                for (int i = BeginningNumber; i < _files.Count + BeginningNumber; i++)
+                Parallel.For(i, _files.Count + BeginningNumber, current =>
                 {
+                    File.Copy($"{_files[current - BeginningNumber].FilePath}",
+                    $"{FolderPath}\\{_first}{current}{_last}" +
+                    $"{Path.GetExtension(_files[current - BeginningNumber].FilePath)}", true);
                     UpdateProgress((decimal)100 / _files.Count);
-                    File.Copy($"{_files[i - BeginningNumber].FilePath}", 
-                    $"{desktopfolder}\\{_first}{i}{_last}" +
-                    $"{Path.GetExtension(_files[i - BeginningNumber].FilePath)}", true);
-                }
-            });          
+                });
+            });
+ 
             OnFinish();
         }
 
@@ -178,7 +190,7 @@ namespace Number_Renamer.ViewModels
             Progress = 0;
             Visibility = Visibility.Collapsed;
             _files.Clear();
-            DisplayAlert?.Invoke(this, new MessageEventArgs { Message = "Completed. Check your desktop for a folder." });
+            DisplayAlert?.Invoke(this, new MessageEventArgs { Message = "Completed. Check the folder that you have specified." });
         }
         #endregion
     }

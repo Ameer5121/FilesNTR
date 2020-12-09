@@ -72,5 +72,6 @@
             </Button.Style>
         </Button>
         <ProgressBar Margin="73,0,249,0" Grid.Column="1" Maximum="100" Value="{Binding Progress}" Foreground="MediumSeaGreen" Visibility="{Binding Visibility}" Background="Silver" Grid.Row="1"/>
+        <TextBlock Text="Ver 5" Margin="0,0,100,421"/>
     </Grid>
 </Window>
