@@ -1,8 +1,9 @@
 # Files-Number-Text-Renamer
 
-It's a simple application that lets you rename your files to numbers with optional strings before/after the number.
+Simple application that lets you rename your files to numbers with optional strings before/after the number.
 
-## Showcase:
+Introduction video:
+
 [![](https://user-images.githubusercontent.com/71935713/101708562-27abad80-3a96-11eb-86f9-5eacd3749d62.png)](https://www.youtube.com/watch?v=n3mzE6U_csM)
 
 
