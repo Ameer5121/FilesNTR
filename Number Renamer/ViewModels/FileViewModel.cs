@@ -163,17 +163,25 @@ namespace Number_Renamer.ViewModels
                 Directory.CreateDirectory(FolderPath);
             }           
 
-            int i = BeginningNumber;
-            await Task.Run(() =>
+            try
             {
-                Parallel.For(i, _files.Count + BeginningNumber, current =>
+                int i = BeginningNumber;
+                await Task.Run(() =>
                 {
-                    File.Copy($"{_files[current - BeginningNumber].FilePath}",
-                    $"{FolderPath}\\{_first}{current}{_last}" +
-                    $"{Path.GetExtension(_files[current - BeginningNumber].FilePath)}", true);
-                    UpdateProgress((decimal)100 / _files.Count);
+                    Parallel.For(i, _files.Count + BeginningNumber, current =>
+                    {
+                        File.Copy($"{_files[current - BeginningNumber].FilePath}",
+                        $"{FolderPath}\\{_first}{current}{_last}" +
+                        $"{Path.GetExtension(_files[current - BeginningNumber].FilePath)}", true);
+                        UpdateProgress((decimal)100 / _files.Count);
+                    });
                 });
-            });
+            }
+            catch (Exception e)
+            {
+                DisplayAlert?.Invoke(this, new MessageEventArgs { Message = e.Message });
+            }
+           
  
             OnFinish();
         }
