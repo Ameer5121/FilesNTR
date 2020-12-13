@@ -156,7 +156,6 @@ namespace Number_Renamer.ViewModels
 
         private async void RenameFiles(string FolderPath)
         {                      
-            List<Task> Holder = new List<Task>();
             Visibility = Visibility.Visible;
             if (!Directory.Exists(FolderPath))
             {
@@ -180,6 +179,7 @@ namespace Number_Renamer.ViewModels
             catch (Exception e)
             {
                 DisplayAlert?.Invoke(this, new MessageEventArgs { Message = e.Message });
+                
             }
            
  
