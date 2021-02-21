@@ -9,14 +9,27 @@ namespace Number_Renamer.Command
 {
     public class RelayCommand : ICommand
     {
-        private readonly Action<object> execute;
+        private readonly Func<Task> Taskexecute;
+        private readonly Action execute;
 
         private readonly Func<bool> canExecute;
-        public RelayCommand(Action<object> execute) : this(execute, canExecute: null) // Sometimes you don't need canExecute method. So you can create a command without it like; SomeCommand = new RelayCommand(UpdateName);
+        public RelayCommand(Func<Task> execute) : this(execute, canExecute: null)
+        {
+        }
+        public RelayCommand(Action execute) : this(execute, canExecute: null)
         {
         }
 
-        public RelayCommand(Action<object> execute, Func<bool> canExecute)
+        public RelayCommand(Func<Task> execute, Func<bool> canExecute)
+        {
+            if (execute == null)
+                throw new ArgumentNullException("execute");
+
+            this.Taskexecute = execute;
+            this.canExecute = canExecute;
+        }
+
+        public RelayCommand(Action execute, Func<bool> canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
@@ -43,9 +56,14 @@ namespace Number_Renamer.Command
             return this.canExecute == null ? true : this.canExecute();
         }
 
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
-            this.execute(parameter);
+            if (execute == null)
+            {
+                await Taskexecute();
+                return;
+            }
+            execute();
         }
     }
 }

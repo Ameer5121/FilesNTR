@@ -4,9 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Number_Renamer"
+         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
        
         mc:Ignorable="d"
-        Title="MainWindow" Height="568.5" Width="777.5" Background="Silver" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" MouseDown="Window_MouseDown">
+        Title="MainWindow" Height="568.5" 
+        Width="777.5" 
+        WindowStyle="None" 
+        WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignDarkBackground}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        ResizeMode="NoResize" >
 
     <Window.Resources>
         <Style TargetType="Button" x:Key="{x:Type Button}">
@@ -28,7 +39,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#FF575757">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="67*"/>
             <ColumnDefinition Width="319*"/>
@@ -39,7 +50,7 @@
             <RowDefinition Height="60*"/>
             <RowDefinition Height="0*"/>
         </Grid.RowDefinitions>
-        <ListBox x:Name="List" Background="#FF939292" BorderBrush="Black" ItemsSource="{Binding Files}" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,34,0,0">
+        <ListBox x:Name="List" Background="#FF3A3838" BorderBrush="Black" ItemsSource="{Binding Files}" Grid.ColumnSpan="2" SelectionMode="Multiple" Margin="0,34,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -48,16 +59,79 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
         </ListBox>
-        <TextBox Margin="186,10,358,0" FontSize="20" TextAlignment="Center" Text="{Binding BeginningNumber, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1"/>
-        <TextBlock Background="Transparent" Margin="42,26,452,10" Foreground="White" Text="Beginning Number:" FontSize="15" RenderTransformOrigin="0.196,0.6" Grid.Row="2" Grid.Column="1"/>
-        <Button Content="Choose Files" FontSize="15" Cursor="Hand" Command="{Binding ChooseFiles}" Grid.Row="1"></Button>
-        <Button Content="Clear" FontSize="17" Cursor="Hand" Foreground="Red" Command="{Binding Delete}" CommandParameter="{Binding ElementName=List, Path=SelectedItems}" Grid.Row="2"/>
-        <Button Content="Rename" FontSize="25" Cursor="Hand" Foreground="Black" Command="{Binding Rename}" Grid.Row="1" Grid.Column="1" Margin="73,0,249,0"/>
-        <TextBox Margin="524,10,20,0" FontSize="20" TextAlignment="Center" Text="{Binding Last, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1"/>
-        <TextBox Margin="524,5,20,4" FontSize="20" TextAlignment="Center" Text="{Binding First, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1"/>
-        <TextBlock Background="Transparent" Margin="404,26,114,10" Foreground="White" Text="String after number:" FontSize="12.5" RenderTransformOrigin="0.196,0.6" Grid.Row="2" Grid.Column="1"/>
-        <TextBlock Background="Transparent" Margin="404,16,104,19" Foreground="White" Text="String before number:" FontSize="12" RenderTransformOrigin="0.196,0.6" Grid.Row="1" Grid.Column="1"/>
+        <TextBox Margin="145,10,305,15" 
+                 FontSize="13" 
+                 Text="{Binding BeginningNumber, UpdateSourceTrigger=PropertyChanged}" 
+                 Grid.Row="2" Grid.Column="1"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 materialDesign:TextFieldAssist.UnderlineBrush="DimGray"
+                 materialDesign:HintAssist.Hint="Beginning Number"
+                 materialDesign:HintAssist.Foreground="AntiqueWhite"
+                 CaretBrush="White"
+                 />
+
+        <Button Content="Choose Files" 
+                FontSize="15" 
+                Cursor="Hand" 
+                Command="{Binding ChooseFiles}"
+                Grid.Row="1"
+                Background="#FF433F3F"
+                Foreground="Silver"
+                BorderBrush="#FF2C2B2B"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="Auto"/>
+
+        <Button Content="Clear"
+                FontSize="17" 
+                Cursor="Hand" 
+                Foreground="Red" 
+                Command="{Binding Delete}" 
+                CommandParameter="{Binding ElementName=List, Path=SelectedItems}" 
+                Grid.Row="2"
+                Background="#FF433F3F"
+                BorderBrush="#FF2C2B2B"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="Auto"/>
+
+        <Button Content="Rename" 
+                FontSize="25" 
+                Cursor="Hand" 
+                Command="{Binding Rename}" 
+                Grid.Row="1" Grid.Column="1" 
+                Margin="73,0,249,0"
+                Background="#FF433F3F"
+                Foreground="AntiqueWhite"
+                BorderBrush="#FF2C2B2B"
+                Style="{StaticResource MaterialDesignRaisedDarkButton}" Height="Auto"/>
+
+        <TextBox Margin="447,10,0,15" 
+                 FontSize="13" 
+                 TextAlignment="Center" 
+                 Text="{Binding Last, UpdateSourceTrigger=PropertyChanged}" 
+                 Grid.Row="2" 
+                 Grid.Column="1"
+                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                  materialDesign:TextFieldAssist.UnderlineBrush="DimGray"
+                 materialDesign:HintAssist.Hint="String After Number"
+                 materialDesign:HintAssist.Foreground="AntiqueWhite"
+                 CaretBrush="White"/>
+
+        <TextBox Margin="447,12,0,13" 
+                 FontSize="13"
+                 TextAlignment="Center" 
+                 Text="{Binding First, UpdateSourceTrigger=PropertyChanged}" 
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 materialDesign:TextFieldAssist.UnderlineBrush="DimGray"
+                 materialDesign:HintAssist.Hint="String Before Number"
+                 materialDesign:HintAssist.Foreground="AntiqueWhite"
+                 CaretBrush="White"/>
+
         <Button Margin="610,0,0,409" RenderTransformOrigin="1.185,0.522" Grid.Column="1" BorderBrush="Transparent" Cursor="Hand" Click="Exit">
             <Image Source="/Images/Exit.png" Height="34" Width="30"></Image>
             <Button.Style>
@@ -71,7 +145,16 @@
                 </Style>
             </Button.Style>
         </Button>
-        <ProgressBar Margin="73,0,249,0" Grid.Column="1" Maximum="100" Value="{Binding Progress}" Foreground="MediumSeaGreen" Visibility="{Binding Visibility}" Background="Silver" Grid.Row="1"/>
+        <ProgressBar Margin="73,0,249,0" 
+                     Grid.Column="1" 
+                     Maximum="100" 
+                     Value="{Binding Progress}" 
+                     Foreground="MediumSeaGreen" 
+                     Visibility="{Binding Visibility}" 
+                     Grid.Row="1" 
+                     Height="Auto"
+                     Background="#FF3A3838"
+                     BorderBrush="Red"/>
         <TextBlock Text="Ver 5" Margin="0,0,100,421"/>
     </Grid>
 </Window>

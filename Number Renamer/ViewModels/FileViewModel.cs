@@ -44,9 +44,8 @@ namespace Number_Renamer.ViewModels
             set
             {
                 if (IsRunning())
-                    return;               
-                _beginningNumber = value;
-                OnPropertyChanged();
+                    return;
+                SetPropertyValue(ref _beginningNumber, value);
             }
             
         }
@@ -57,8 +56,7 @@ namespace Number_Renamer.ViewModels
             {
                 if (IsRunning())
                     return;
-                _first = value;
-                OnPropertyChanged();
+                SetPropertyValue(ref _first, value);
             }
         }
         public string Last
@@ -68,8 +66,7 @@ namespace Number_Renamer.ViewModels
             {
                 if (IsRunning())
                     return;
-                _last = value;
-                OnPropertyChanged();
+                SetPropertyValue(ref _last, value);
             }
         }
         public Visibility Visibility
@@ -77,8 +74,7 @@ namespace Number_Renamer.ViewModels
             get => _visibility;
             set
             {
-                _visibility = value;
-                OnPropertyChanged();
+                SetPropertyValue(ref _visibility, value);
             }
         }
         public decimal Progress
@@ -86,8 +82,7 @@ namespace Number_Renamer.ViewModels
             get => _progress;
             set
             {
-                _progress = value;
-                OnPropertyChanged();
+                SetPropertyValue(ref _progress, value);
             }
         }
         #endregion
@@ -107,7 +102,7 @@ namespace Number_Renamer.ViewModels
             return true;
         }
 
-        private void Choose(object param)
+        private void Choose()
         {
             var OpenDialog = new OpenFileDialog();
             OpenDialog.Multiselect = true;
@@ -132,7 +127,7 @@ namespace Number_Renamer.ViewModels
 
             return true;
         }
-        private void RemoveFiles(object FileList)
+        private void RemoveFiles()
         {
             _files.Clear();
         }
@@ -145,16 +140,16 @@ namespace Number_Renamer.ViewModels
             return true;
         }
 
-        private void SelectFolder(object param)
+        private async Task SelectFolder()
         {
             var OpenDialog = new FolderBrowserDialog();
             if (OpenDialog.ShowDialog() == DialogResult.OK)
             {
-                RenameFiles(OpenDialog.SelectedPath);
+                await RenameFiles(OpenDialog.SelectedPath);
             }
         }
 
-        private async void RenameFiles(string FolderPath)
+        private async Task RenameFiles(string FolderPath)
         {                      
             Visibility = Visibility.Visible;
             if (!Directory.Exists(FolderPath))
@@ -178,11 +173,8 @@ namespace Number_Renamer.ViewModels
             }
             catch (Exception e)
             {
-                DisplayAlert?.Invoke(this, new MessageEventArgs { Message = e.Message });
-                
-            }
-           
- 
+                DisplayAlert?.Invoke(this, new MessageEventArgs { Message = e.Message });              
+            }          
             OnFinish();
         }
 
