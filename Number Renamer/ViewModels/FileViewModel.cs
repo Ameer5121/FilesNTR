@@ -18,22 +18,18 @@ namespace Number_Renamer.ViewModels
 {
     class FileViewModel : ViewModelBase
     {
-        #region Constructor
         public FileViewModel()
         {
             _files = new ObservableCollection<FileModel>();
             _visibility = Visibility.Collapsed;           
         }
-        #endregion
 
-        #region Fields
         private string _first;
         private string _last;           
         private int _beginningNumber;
         private ObservableCollection<FileModel> _files;
         private Visibility _visibility;
         private decimal _progress;
-        #endregion
 
         #region Properties
         public event EventHandler<MessageEventArgs> DisplayAlert;
@@ -183,7 +179,7 @@ namespace Number_Renamer.ViewModels
             return Visibility == Visibility.Visible ? true : false;
         }
 
-        private void UpdateProgress(decimal ValueToAdd) => Progress += ValueToAdd;
+        private void UpdateProgress(decimal valueToAdd) => Progress += valueToAdd;
 
         private void OnFinish()
         {
