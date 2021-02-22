@@ -155,6 +155,5 @@
                      Height="Auto"
                      Background="#FF3A3838"
                      BorderBrush="Red"/>
-        <TextBlock Text="Ver 5" Margin="0,0,100,421"/>
     </Grid>
 </Window>
