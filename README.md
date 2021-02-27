@@ -6,7 +6,7 @@ All you have to do is type a beginning number, and you can also type out things 
 
 Introduction video:
 
-[![](https://user-images.githubusercontent.com/71935713/101708562-27abad80-3a96-11eb-86f9-5eacd3749d62.png)](https://www.youtube.com/watch?v=n3mzE6U_csM)
+[![](https://user-images.githubusercontent.com/71935713/109394087-d345fa80-792d-11eb-93e0-465885a79a83.png)](https://www.youtube.com/watch?v=M44ZGB6M3R4)
 
 
 # About the project
