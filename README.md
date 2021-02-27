@@ -9,6 +9,9 @@ Introduction video:
 [![](https://user-images.githubusercontent.com/71935713/109394087-d345fa80-792d-11eb-93e0-465885a79a83.png)](https://www.youtube.com/watch?v=M44ZGB6M3R4)
 
 
-# About the project
-
-* It is made in WPF using MVVM design pattern.
+# Framework:
+* Made in WPF
+     * MVVM Design Pattern
+ 
+ # Third-Party Libraries:
+ * MaterialDesignThemes
